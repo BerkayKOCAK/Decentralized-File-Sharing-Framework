@@ -63,7 +63,7 @@ class App extends Component {
       selectedTag: "Health",
       latestTransactionHash: null,
       latestTransactionArray: [],
-      dialog:true,
+      dialog:false,
       nodeStatus:"online",
       privileges:null,
       selectedPrivilege:null,
@@ -161,8 +161,7 @@ class App extends Component {
           deployedNetwork2 && deployedNetwork2.address,accounts
         ); 
       }
-      console.log("XXXXXXXXXXXXX");
-      
+  
       //GET IPFS HASH OF PREVIOUS
       const metaFileHash = await instance.methods.getMetafile().call();
       this.setState({ web3, accounts, contract:instance, contractReceiver: instanceReceiver , 
@@ -182,20 +181,20 @@ class App extends Component {
     
     //NODE INIT (DEPRECATE)
     await this.state.node.once('ready', () => {
-      console.log('Online status: ', this.state.node.isOnline() ? 'online' : 'offline')
+      console.log('Online status: ', this.state.node.isOnline() ? 'online' : 'offline');
       this.setState({nodeStatus: this.state.node.isOnline() ? 'online' : 'offline'});
-      this.state.node.id(function (err, identity) {
+      /*this.state.node.id(function (err, identity) {
         if (err) {
           console.error("ERR "+err)
         }
         console.log(identity)
-        });
+        });*/
       });
 
     
       
       //FOLDER LIST
-      const { accounts, contract } = this.state; 
+      /*const { accounts, contract } = this.state; 
     await this.state.node.files.ls('/', function (err, files) {
         if (err) {
           console.error("ERR get"+err);
@@ -205,12 +204,12 @@ class App extends Component {
         files.forEach((file) => {
           console.log(file.name);
         })
-      });
+      });*/
 
 
     if(this.state.metaFileHash == "")
       { 
-        //bugFucker
+        //bugKiller
         await this.state.node.files.rm('/METAFILE',{ recursive: true }, (err) => {
           if (err) {
             console.error("ERR remove  "+err)
@@ -240,9 +239,19 @@ class App extends Component {
               this.setState( { storedFolderNames :tempArr } );
           });
         });
-        this.setState(await fetchMetaFile(this.state));
-
+        console.log(this.state);
+        this.setState( await fetchMetaFile(this.state));
+       
+        //this.setState({ metaFile : tempState.metaFile , metaArray : tempState.metaArray })
+        console.log(this.state);
+      
+       
+     
+       
+        
     }
+
+     
   }
   
 
@@ -316,9 +325,11 @@ class App extends Component {
         });
       }
     }
+    console.log(this.state);
   }
 
   fileSubmit = async() => {
+    console.log(this.state);
     const { accounts, contract } = this.state;
     if (this.state.hashResponse == null)
     {
@@ -333,7 +344,7 @@ class App extends Component {
           "privileges":this.state.privileges
         };
 
-    if(this.state.selectedPrivilege !=this.state.privileges)
+    if(this.state.selectedPrivilege != this.state.privileges)
       {
         console.log("BLASPHEMY");
         await metaUpdateByOwner(this.state,tempFileOBJ)
@@ -341,6 +352,8 @@ class App extends Component {
       }
 
     let data = [];
+    console.log(this.state);
+    
     data = JSON.parse(this.state.metaFile.content);
     let boolSwitch = true;
     
@@ -385,7 +398,7 @@ class App extends Component {
       }
       document.getElementById("response").innerHTML = 'Response : ' + data.toString();
       console.log("inc data = " + data.toString());
-    })
+    });
 
     const validCID = this.state.hashResponse;
 
@@ -475,8 +488,9 @@ class App extends Component {
     try{
     
     let tempMetaArr = this.state.metaArray;
-    const hashes =  checkIPFSHash(this.state,"getHashes");
-    if((hashes == undefined ) || (hashes == null) || (tempMetaArr == null))
+    let  hashes =  checkIPFSHash(this.state,"getHashes");
+   
+    if((hashes == undefined ) || (hashes == null) || (tempMetaArr == null) || (hashes.length == 0))
     {
       console.log("Prev Transaction Detected");
       return;
@@ -484,10 +498,12 @@ class App extends Component {
     else
     {
 
+      
     console.log("DIALOG TRIGGERED");
-    let names = this.state.storedFileNames;
-    
-      if (names != null)
+    let names =  this.state.storedFileNames;
+    if(names == null)
+    {return;}
+    if (names.length > 0) 
       {
         let namesSTR = names.toString();
         namesSTR = namesSTR.replace(",","\n");
@@ -520,8 +536,10 @@ class App extends Component {
         </div>
         );
       }
-      else
-      {return;}
+      else if ((names == null) || (names == undefined) || (names.length== 0))
+      { console.log("ENDID");
+      
+        return null;}
     }
    }catch(e) {
       console.error("Problem", e)
@@ -598,3 +616,6 @@ class App extends Component {
   }
 }
 export default App;
+
+
+

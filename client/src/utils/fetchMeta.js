@@ -25,6 +25,7 @@ const fetchMetaFile = async (state) =>
         const storedFiles = await checkIPFSHash(state,"check");
         state.storedFileNames=storedFiles;
         console.log("STORED FILES"+state.storedFileNames);
+        state.dialog = true;
         newState = state;
       });
     return newState;

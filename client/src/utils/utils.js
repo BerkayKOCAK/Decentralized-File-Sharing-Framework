@@ -1,5 +1,4 @@
 
-import React, { Component } from "react";
 import isIPFS from "is-ipfs"
 
 const checkIPFSHash = async (state,mode) =>
@@ -34,6 +33,7 @@ const checkIPFSHash = async (state,mode) =>
   console.log("approvedHashes "+approvedHashes);
   
   if(approvedHashes == null){
+    console.log("\nNone of the hashes approved !\n");
       return null;
     }
   else if (mode == "check"){
@@ -108,3 +108,5 @@ const checkDuplicateName = (state,names) => {
 }
 
 export { checkIPFSHash , checkDuplicate   };
+
+
