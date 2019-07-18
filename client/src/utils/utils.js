@@ -8,6 +8,7 @@ const checkIPFSHash = async (state,mode) =>
   let names   = [];
   let tags    = [];
   let privileges    = [];
+  let keys = [];
   if(transactionARR.length<2)
   {return null;}
   
@@ -22,10 +23,11 @@ const checkIPFSHash = async (state,mode) =>
       }
       else
       {
-        hashes.push(transactionARR[hashIndex]);
         names.push(transactionARR[hashIndex-1]);
+        hashes.push(transactionARR[hashIndex]);
         tags.push(transactionARR[hashIndex+1]);
         privileges.push(transactionARR[hashIndex+2]);
+        keys.push(transactionARR[hashIndex+3]);
       }
     };
 

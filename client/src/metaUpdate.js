@@ -1,4 +1,4 @@
-
+import crypto from 'crypto';
 const metaUpdate = async (state,newMeta) =>
 {
     
@@ -11,12 +11,17 @@ const metaUpdate = async (state,newMeta) =>
           "name": "meta.json",
           "hash": "QmeFJofJMLbH8s2RVLZ6QHVB4PfHwbeDRmh28tvvXt5MbU",
           "tag" : "meta",
-          "privileges" : state.privileges
+          "privileges" : state.privileges,
+          "key":state.accounts
         }
       ];
       
+
         userMeta = JSON.stringify(metaJSON);//json arr to json obj
         fileBuffer = new Buffer.from(userMeta);//json obj to buffer
+        const key = crypto.randomBytes(32);
+        await state.contract.methods.setKey(key).send({ from: state.accounts[0] ,gasPrice: '20000000000', gas: 6721975});
+        //encrypt "fileBuffer" here
     }
     else
     {fileBuffer = newMeta;}

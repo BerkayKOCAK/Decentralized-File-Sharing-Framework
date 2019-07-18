@@ -14,11 +14,12 @@ import listClass from "./listComponent";
 import fileReaderStream from "filereader-stream";
 import {checkIPFSHash } from './utils/utils';
 import Button from '@material-ui/core/Button';
-
+import encrypt from "./crypto/encrypt";
+import decrypt from "./crypto/decrypt";
 import Icon from '@material-ui/core/Icon';
 import { ListItem, Divider , ListItemText} from "@material-ui/core";
 import fetchMeta from "./utils/fetchMeta";
-import { element } from "prop-types";
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -67,7 +68,8 @@ class App extends Component {
       nodeStatus:"online",
       privileges:null,
       selectedPrivilege:null,
-      loading: false
+      loading: false,
+      encryptKey:""
     };
   
     this.fileCapture = this.fileCapture.bind(this);
@@ -88,8 +90,12 @@ class App extends Component {
       
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-    
+      const wallet = web3.eth.accounts.wallet;
+
       console.log("CURRENT ACCOUNT   "+accounts);
+      console.log("WALLET "+wallet.privateKey);
+      
+      
       let privileges;
       if (accounts == addresses[0]) {privileges = "SENDER"}
       else if (accounts == addresses[1]) {privileges = "RECEIVER"}
@@ -164,8 +170,9 @@ class App extends Component {
   
       //GET IPFS HASH OF PREVIOUS
       const metaFileHash = await instance.methods.getMetafile().call();
+      const encryptKey = await instance.methods.getKey().call();
       this.setState({ web3, accounts, contract:instance, contractReceiver: instanceReceiver , 
-        contractSender:instanceSender, node:ipfsNode, metaFileHash , privileges , selectedPrivilege:privileges});
+        contractSender:instanceSender, node:ipfsNode, metaFileHash , privileges , encryptKey , selectedPrivilege:privileges});
       await this.ready();
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -311,9 +318,17 @@ class App extends Component {
         console.log("fileBuffer =" + fileBuffer);
 
         this.setState( {buffer: fileBuffer});
+        console.log();
         
+        // ENCRYPT
+        
+        const encryptedBuffer = encrypt(this.state.encryptKey,fileBuffer);
+        // outputs your buffer
+        //console.log(decrypt(key,encryptedBuffer).toString('utf8'));
+
+
         //add file to ipfs
-        this.state.node.add(fileBuffer, (err, filesAdded) => {
+        this.state.node.add(encryptedBuffer, (err, filesAdded) => {
           if (err) {
             return console.error('Error - ipfs add', err, filesAdded);
           }
@@ -341,7 +356,8 @@ class App extends Component {
           "name": this.state.uploadedFileName,
           "hash": this.state.hashResponse,
           "tag" : this.state.selectedTag,
-          "privileges":this.state.privileges
+          "privileges":this.state.privileges,
+          "key":this.state.encryptKey
         };
 
     if(this.state.selectedPrivilege != this.state.privileges)
@@ -439,7 +455,8 @@ class App extends Component {
             "name": "xxx",
             "hash": "xxx",
             "tag" : "xxx",
-            "privileges":"xxx"
+            "privileges":"xxx",
+            "key":"xxx"
           } ;
     for(let i=0;i<approvedHashes.length;i++)
     {
@@ -448,6 +465,7 @@ class App extends Component {
       tempFileOBJ.hash  =   transactionARR[index];
       tempFileOBJ.tag   =   transactionARR[index+1];
       tempFileOBJ.privileges   =   transactionARR[index+2];
+      tempFileOBJ.key   =   transactionARR[index+3];
       console.log("tempFileOBJ  "+tempFileOBJ.name);
       this.state.metaArray.push(tempFileOBJ);
     }
