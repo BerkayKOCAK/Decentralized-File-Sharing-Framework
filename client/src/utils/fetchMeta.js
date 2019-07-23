@@ -29,7 +29,7 @@ const fetchMetaFile = async (state) =>
         newState = state;
       });
     return newState;
-    
+
 }
 
 export default fetchMetaFile;
