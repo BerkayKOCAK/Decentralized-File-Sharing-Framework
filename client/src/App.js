@@ -30,9 +30,9 @@ import { css } from '@emotion/core';
 import Typography from '@material-ui/core/Typography';
 
 
-const addresses = [ "0x708aF72f36f3D608e9Fa5C9714df8Ad4A28035fF",   //SENDER
-                    "0x01D195365f7f42E4B6925f7D954c79D634CE44F8",   //RECEIVER
-                    "0x59cE9A3eCEE53c4171f86AEDd7f479004E2F8cc2"];  //INSTITUTE
+const addresses = [ "0xEE36d99d9Af96F1EF2FC86a257d47f72a77dE51f",   //SENDER
+                    "0xB7476c61E9805Cf3a67256448BB5F700a4b1DAD7",   //RECEIVER
+                    "0xD0cfd5e97650cD3b197E00fc91C267808A3447A5"];  //INSTITUTE
 
 const override = css`
     display: block;
@@ -572,9 +572,13 @@ class App extends Component {
      
       <div className="App">
        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-        <h1>IPFS in the Browser With Truffle-React</h1>
+       <h1>Personal Data Sharing Application</h1>
         <p>This is an application demo which has been developed over distributed file sharing framework</p>
-        <p>Opening two tabs of this page in the same browser will share node configuration.This makes two instances of the same node, with the same private key and identity.</p>
+        <p>It works for 3 types of data : 
+          <br></br>Health Report
+          <br></br>Financial Report
+          <br></br>Criminal Report
+        </p>
         <Divider variant="middle" />
         <div className="App-logo"></div>
         <h2 id="status">WELCOME {this.state.privileges}</h2>
