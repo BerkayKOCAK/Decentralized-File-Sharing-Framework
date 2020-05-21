@@ -1,7 +1,7 @@
 # Decentralized-File-Sharing-Framework
 A framework for sensitive data sharing using ipfs as database and blockchain as account management with browser interface.
 
-This project have been published by Springer as research paper. Link =https://link.springer.com/chapter/10.1007%2F978-3-030-
+This project has started as a school project but then it turned to a research. Thus it have been published by Springer as research paper. Link =https://link.springer.com/chapter/10.1007%2F978-3-030-
 27355-2_11
 
 Main language Javascript. Solidity is used for smart contracts. Html5,CSS and React.js is used for generic website.
