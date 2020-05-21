@@ -5,4 +5,4 @@ This project have been published by Springer as research paper. Link =https://li
 27355-2_11
 
 Main language Javascript. Solidity is used for smart contracts. Html5,CSS and React.js is used for generic website.
-IPFS used as database and Ethereum used for transactions with Web3.js library and Metamask accesmanagement.
+IPFS used as database and Ethereum used for transactions with Web3.js library and Metamask access management.
